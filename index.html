@@ -1,0 +1,152 @@
+html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+        <a-assets>
+            <img id="grass" src="textures/grass_seamless.jpg" />
+            <img id="sand" src="textures/sand_seamless.jpg" />
+            <img id="metal" src="textures/metal_seamless.jpg" />
+            <img id="sunny-sky" src="textures/sunny-sky.jpg" />
+        </a-assets>
+
+        <a-plane material="color: #FFFFFF;
+                        src: #grass;
+                        repeat: 5000 5000"
+                        rotation="-90 0 0"
+                        scale="10000 10000 1"></a-plane>
+        <a-sky src="#sunny-sky" rotation="0 -115 0" material="" geometry="" scale=""></a-sky>
+
+        <a-ring color="#FFFFFF"
+                position="0 0.05 0"
+                scale="1 0.236 1"
+                radius-inner="151.5"
+                radius-outer="152"
+                rotation="-90 0 0"></a-ring>
+
+        <a-ring color="#FFFFFF"
+                position="0 0.05 0"
+                radius-inner="0.7"
+                radius-outer="1"
+                rotation="-90 0 0"></a-ring>
+
+        <a-plane color="#FFFFFF"
+                position="0 0.05 0"
+                width="0.1"
+                height="71.7"
+                rotation="-90 0 0"></a-plane>
+
+        <a-entity position="122 0.10 0">
+            <a-circle material="color: #FFFFFF;
+                            src: #sand;
+                            repeat: 10 20"
+                    scale="1 2 1"
+                    radius="10"
+                    rotation="-90 0 0"></a-circle>
+            <a-torus material="color: #FFFFFF;
+                                src: #metal;"
+                     position="0 7 0"
+                     rotation="0 90 0"
+                     radius="1"
+                     radius-tubular="0.05"></a-torus>
+            <a-cylinder material="color: #FFFFFF;
+                            repeat: 1 6;
+                            src: #metal;"
+                        height="6"
+                        position="0 3 0"
+                        radius="0.05">
+            </a-cylinder>
+
+            <a-torus material="color: #FFFFFF;
+                                src: #metal;"
+                    position="0 5 -7"
+                    rotation="0 90 0"
+                    radius="1"
+                    radius-tubular="0.05"></a-torus>
+            <a-cylinder material="color: #FFFFFF;
+                            repeat: 1 4;
+                            src: #metal;"
+                        height="4"
+                        position="0 2 -7"
+                        radius="0.05">
+            </a-cylinder>
+
+
+            <a-torus material="color: #FFFFFF;
+                                src: #metal;"
+                    position="0 5 7"
+                    rotation="0 90 0"
+                    radius="1"
+                    radius-tubular="0.05"></a-torus>
+            <a-cylinder material="color: #FFFFFF;
+                                repeat: 1 4;
+                                src: #metal;"
+                    height="4"
+                    position="0 2 7"
+                    radius="0.05">
+            </a-cylinder>
+
+
+        </a-entity>
+        <a-entity position="-122 0.01 0">
+            <a-circle material="color: #FFFFFF;
+                            src: #sand;
+                            repeat: 10 20"
+                    scale="1 2 1"
+                    radius="10"
+                    rotation="-90 0 0"></a-circle>
+            <a-torus material="color: #FFFFFF;
+                                src: #metal;"
+                     position="0 7 0"
+                     rotation="0 90 0"
+                     radius="1"
+                     radius-tubular="0.05"></a-torus>
+            <a-cylinder material="color: #FFFFFF;
+                            repeat: 1 6;
+                            src: #metal;"
+                        height="6"
+                        position="0 3 0"
+                        radius="0.05">
+            </a-cylinder>
+
+            <a-torus material="color: #FFFFFF;
+                                src: #metal;"
+                    position="0 5 -7"
+                    rotation="0 90 0"
+                    radius="1"
+                    radius-tubular="0.05"></a-torus>
+            <a-cylinder material="color: #FFFFFF;
+                            repeat: 1 4;
+                            src: #metal;"
+                        height="4"
+                        position="0 2 -7"
+                        radius="0.05">
+            </a-cylinder>
+
+
+            <a-torus material="color: #FFFFFF;
+                                src: #metal;"
+                    position="0 5 7"
+                    rotation="0 90 0"
+                    radius="1"
+                    radius-tubular="0.05"></a-torus>
+            <a-cylinder material="color: #FFFFFF;
+                                repeat: 1 4;
+                                src: #metal;"
+                    height="4"
+                    position="0 2 7"
+                    radius="0.05">
+            </a-cylinder>
+
+
+        </a-entity>
+
+
+        <a-camera position="15 5 0" >
+        </a-camera>
+
+    </a-scene>
+  </body>
+</html>
