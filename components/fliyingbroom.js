@@ -1,10 +1,10 @@
 AFRAME.registerComponent('fliying-broom', {
             schema: {
-                thumbstickControls: {type: 'selector'},
-                keysControls: {type: 'selector'},
+                controls: {type: 'selector'},
             },
             init: function () {
-                this.speed = -0.01;
+                this.maxSpeed = 0.02;
+                this.speed = 0;
                 this.rotation = new THREE.Vector3(0, 0, 0);
                 this.controllerRotation = new THREE.Vector3(0, 0, 0);
 
@@ -14,34 +14,45 @@ AFRAME.registerComponent('fliying-broom', {
 
 
                 self = this;
-                this.data.keysControls.addEventListener('rotationxchange', function (e) {
+                this.data.controls.addEventListener('rotationxchange', function (e) {
                     self.controllerRotation.x = e.detail.value;
                 });
 
-                this.data.keysControls.addEventListener('rotationychange', function (e) {
+                this.data.controls.addEventListener('rotationychange', function (e) {
                     self.controllerRotation.y = e.detail.value;
-                });
-                this.data.thumbstickControls.addEventListener('rotationxchange', function (e) {
-                    self.controllerRotation.x = e.detail.value;
                 });
 
-                this.data.thumbstickControls.addEventListener('rotationychange', function (e) {
-                    self.controllerRotation.y = e.detail.value;
+                this.data.controls.addEventListener('grip', function (e) {
+                    self.grip = e.detail.value;
                 });
+
+                this.data.controls.addEventListener('speedboost', function (e) {
+                    if (e.detail.value){
+                        self.maxSpeed = 0.04;
+                    } else {
+                        self.maxSpeed = 0.02;
+                    }
+                });
+
 
 
             },
 
             tick: function (time, timeDelta) {
-                this.rotation.setY(this.rotation.y-this.controllerRotation.x)
-                this.el.object3D.position.setY(this.el.object3D.position.y-this.controllerRotation.y/10)
+                this.speed = Math.max(this.speed - 0.00015, 0);
 
-                this.el.object3D.rotation.set(THREE.Math.degToRad(this.rotation.x),
-                                        THREE.Math.degToRad(this.rotation.y),
-                                        THREE.Math.degToRad(this.rotation.z));
+                if (this.grip){
+                    console.log(this.maxSpeed);
+                    this.speed = this.maxSpeed;
+                    this.rotation.setY(this.rotation.y-this.controllerRotation.x)
+                    this.el.object3D.position.setY(this.el.object3D.position.y-this.controllerRotation.y/10)
 
-                this.el.object3D.translateZ(this.speed*timeDelta);
+                    this.el.object3D.rotation.set(THREE.Math.degToRad(this.rotation.x),
+                                            THREE.Math.degToRad(this.rotation.y),
+                                            THREE.Math.degToRad(this.rotation.z));
+                }
 
+                this.el.object3D.translateZ(-this.speed*timeDelta);
 
                 if (this.el.object3D.position.y < 1) {
                     this.el.object3D.position.y = 1;

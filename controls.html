@@ -1,0 +1,157 @@
+
+
+AFRAME.registerComponent('control-left', {
+    init: function() {
+    this.el.addEventListener('hit', (e) => {
+        left = true;
+    })
+    this.el.addEventListener('hitend', (e) => {
+        left = false;
+    })
+    }
+})
+
+AFRAME.registerComponent('control-center', {
+    init: function() {
+    this.el.addEventListener('hit', (e) => {
+        center = true;
+    })
+    this.el.addEventListener('hitend', (e) => {
+        center = false;
+    })
+    }
+})
+
+AFRAME.registerComponent('control-right', {
+    init: function() {
+    this.el.addEventListener('hit', (e) => {
+        right = true;
+    })
+    this.el.addEventListener('hitend', (e) => {
+        right = false;
+    })
+    }
+})
+
+AFRAME.registerComponent('control-up', {
+    init: function() {
+    this.el.addEventListener('hit', (e) => {
+        go_up = true;
+    })
+    this.el.addEventListener('hitend', (e) => {
+        go_up = false;
+    })
+    }
+})
+
+AFRAME.registerComponent('control-down', {
+    init: function() {
+    this.el.addEventListener('hit', (e) => {
+        go_down = true;
+        log.debug("down hit");
+    })
+    this.el.addEventListener('hitend', (e) => {
+        go_down = false;
+        log.debug("down hit end");
+    })
+    }
+})
+
+
+/*
+
+
+if (center && this.grip){
+    if (this.lefthand.object3D.rotation.x < -0.5){
+        this.rotation.setX(this.rotation.x+0.3)
+    } else if (this.lefthand.object3D.rotation.x > -0.4){
+        this.rotation.setX(this.rotation.x-0.3)
+    }
+
+    if (this.lefthand.object3D.rotation.z < -0.1){
+        this.rotation.setY(this.rotation.y-0.5)
+    } else if (this.lefthand.object3D.rotation.z > 0.1){
+        this.rotation.setY(this.rotation.y+0.5)
+    }
+
+
+
+   /* if (left){
+        this.rotation.setY(this.rotation.y+1)
+        this.broom.object3D.rotation.set(THREE.Math.degToRad(0),
+                        THREE.Math.degToRad(110),
+                        THREE.Math.degToRad(25));
+    } else if (right){
+        this.rotation.setY(this.rotation.y-1)
+        this.broom.object3D.rotation.set(THREE.Math.degToRad(0),
+                        THREE.Math.degToRad(70),
+                        THREE.Math.degToRad(25));
+    } else{
+        this.broom.object3D.rotation.set(THREE.Math.degToRad(0),
+                        THREE.Math.degToRad(90),
+                        THREE.Math.degToRad(25));
+    }*/
+
+
+}
+
+/*
+this.lefthand.addEventListener('gripdown', function (event) {
+    self.grip = true;
+});
+this.lefthand.addEventListener('gripup', function (event) {
+    self.grip = false;
+});
+*/
+
+
+/* if (this.grip){
+    this.debugtxt="1 ";
+}else{
+    this.debugtxt="0 ";
+}
+
+if (this.left){
+    this.debugtxt+="1 ";
+}else{
+    this.debugtxt+="0 ";
+}
+
+if (this.center){
+    this.debugtxt+="1 ";
+}else{
+    this.debugtxt+="0 ";
+}
+
+if (this.right){
+    this.debugtxt+="1 ";
+}else{
+    this.debugtxt+="0 ";
+}
+
+
+document.getElementById("debug").setAttribute("text","value:"+this.debugtxt);
+*/
+
+
+
+//console.log("tick");
+//console.log(this.box.className);
+//console.log(this.debug);
+/*this.position.setZ(this.position.z-0.01);
+this.el.object3D.position.set(this.position.x, this.position.y, this.position.z);
+this.broom.object3D.position.set(this.position.x, this.position.y+0.75, this.position.z);
+*/
+//debug.setAttribute("text","value:"+this.box.className);
+*/
+
+
+
+<a-entity id="controls" position="0 0.7 -0.5" visible="false">
+    <a-box control-left id="control-left" width="0.4" height="0.2" depth="0.4" color="red" position="-0.35 0.2 0" class="control"></a-box>
+    <a-box control-right id="control-right" width="0.4" height="0.2" depth="0.4" color="blue" position="0.35 0.2 0" class="control"></a-box>
+    <a-box control-up id="control-up" width="1.2" height="0.2" depth="0.4" color="yellow" position="0 0.4 0" class="control"></a-box>
+    <a-box control-down id="control-down" width="1.2" height="0.2" depth="0.4" color="orange" position="0 0 0" class="control"></a-box>
+
+    <a-box control-center id="control-center" width="1.2" height="0.6" depth="0.4" color="green" position="0 0.2 0" class="control" visible="false"></a-box>
+</a-entity>

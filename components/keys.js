@@ -17,6 +17,12 @@ AFRAME.registerComponent('keys',{
         if (evt.key=='s'){
             self.el.emit('rotationychange', {value: 1})
         }
+        if (evt.key==' '){
+            self.el.emit('grip', {value: true});
+        }
+        if (evt.key == 'e'){
+            self.el.emit('speedboost', {value: true});
+        }
     },
 
     keyUp: function (evt) {
@@ -25,6 +31,12 @@ AFRAME.registerComponent('keys',{
         }
         if (evt.key=='w'|| evt.key=='s'){
             self.el.emit('rotationychange', {value: 0})
+        }
+        if (evt.key==' '){
+            self.el.emit('grip', {value: false});
+        }
+        if (evt.key == 'e'){
+            self.el.emit('speedboost', {value: false});
         }
     }
 });
