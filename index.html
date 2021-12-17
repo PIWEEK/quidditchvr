@@ -69,6 +69,7 @@ html>
 
                         document.getElementById("score").components.score.setEnabled(true);
                         document.getElementById("snitch").components.snitch.setEnabled(false);
+                        document.getElementById("quaffle").components.quaffle.setEnabled(false);
 
                         if (this.song!="music_potter"){
                             this.song = "music_potter";
@@ -105,6 +106,7 @@ html>
 
                         document.getElementById("score").components.score.setEnabled(true);
                         document.getElementById("snitch").components.snitch.setEnabled(false);
+                        document.getElementById("quaffle").components.quaffle.setEnabled(false);
 
                         this.song = "music_quidditch";
                     } else if (e.detail.value=="snitch"){
@@ -127,6 +129,7 @@ html>
                         document.getElementById("snitch").components.snitch.reset();
                         document.getElementById("score").components.score.setEnabled(false);
                         document.getElementById("snitch").components.snitch.setEnabled(true);
+                        document.getElementById("quaffle").components.quaffle.setEnabled(false);
 
                         var rings = document.querySelectorAll(".ring");
                         for (var i=0;i<rings.length;i++){
@@ -162,6 +165,7 @@ html>
 
                         document.getElementById("score").components.score.setEnabled(false);
                         document.getElementById("snitch").components.snitch.setEnabled(false);
+                        document.getElementById("quaffle").components.quaffle.setEnabled(true);
                     }
                 })
             }
@@ -231,6 +235,12 @@ html>
 
         <a-entity id="quaffle" quaffle="controls: .righthand" gltf-model="#quafflemodel" scale="0.005 0.005 0.005" position="-150 10 0" rotation="0 0 0" class="touchable">
         </a-entity>
+        <a-box visible="false" color="green" id="quaffletarget" position="-130 8 0"></a-box>
+
+
+        <a-circle sphere-collider="objects:.touchable" class="goal" position="-122 7 0" rotation="0 90 0" visible="false" radius="1"></a-circle>
+        <a-circle sphere-collider="objects:.touchable" class="goal" position="-122 5 -7" rotation="0 90 0" visible="false" radius="1"></a-circle>
+        <a-circle sphere-collider="objects:.touchable" class="goal" position="-122 5 7" rotation="0 90 0" visible="false" radius="1"></a-circle>
 
 
 
