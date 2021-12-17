@@ -3,46 +3,233 @@ html>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
 
 
     <script src="components/handcontrol.js"></script>
+    <script src="components/grabcontrol.js"></script>
     <script src="components/keys.js"></script>
     <script src="components/fliyingbroom.js"></script>
+    <script src="components/snitch.js?v=2"></script>
+    <script src="components/ring.js"></script>
+    <script src="components/score.js"></script>
+    <script src="components/menuitem.js"></script>
+    <script src="components/quaffle.js"></script>
 
-    <a-asset-item id="nimbus" src="/models/nimbus/scene.gltf"></a-asset-item>
+
   </head>
   <body>
     <script>
+
+        AFRAME.registerComponent('logoscreen', {
+            init: function() {
+                var self = this;
+                this.timeout = 15000;
+                this.enabled = true;
+                document.getElementById("musicplayer").components.sound.stopSound();
+                document.getElementById("musicplayer").setAttribute("sound", "src: #music_potter; autoplay: false");
+                document.getElementById("musicplayer").components.sound.playSound();
+
+            },
+            tick: function (time, timeDelta) {
+                if (this.enabled) {
+                    this.timeout -= timeDelta;
+                    if (this.timeout<=0){
+                        this.enabled = false;
+                        console.log("emit start minigame menu");
+                        this.el.emit('startminigame', {value: "menu"})
+                    }
+                }
+            }
+
+        })
+
+        AFRAME.registerComponent('mainscene', {
+            init: function() {
+                var self = this;
+                document.getElementById("musicplayer").components.sound.playSound();
+                this.fliyingbroom = document.querySelector('#player').components.fliyingbroom;
+                this.menuitems = document.querySelector(".menuitem");
+                this.song = "music_potter";
+
+                this.el.addEventListener('startminigame', (e) => {
+                    if (e.detail.value=="menu"){
+                        this.fliyingbroom.setActive(false);
+                        document.getElementById("logoscreen").setAttribute("visible", false);
+                        document.getElementById("menuroom").setAttribute("visible", true);
+                        document.getElementById("field").setAttribute("visible", false);
+                        document.getElementById("player").setAttribute("position", "0 0 0");
+                        document.getElementById("player").setAttribute("rotation", "0 -90 0");
+                        document.getElementById("broom").setAttribute("visible", "false");
+                        document.getElementById("score").setAttribute("visible", "false");
+                        document.getElementById("time").setAttribute("visible", "false");
+                        document.getElementById("course").setAttribute("visible", "false");
+                        document.getElementById("snitch").setAttribute("visible", "false");
+                        document.getElementById("quaffle").setAttribute("visible", "false");
+
+                        document.getElementById("score").components.score.setEnabled(true);
+                        document.getElementById("snitch").components.snitch.setEnabled(false);
+
+                        if (this.song!="music_potter"){
+                            this.song = "music_potter";
+                            document.getElementById("musicplayer").components.sound.stopSound();
+                            document.getElementById("musicplayer").setAttribute("sound", "src: #music_potter; autoplay: false");
+                            document.getElementById("musicplayer").components.sound.playSound();
+                        }
+                    } else if (e.detail.value=="rings"){
+                        this.fliyingbroom.setActive(true);
+                        document.getElementById("score").components.score.reset();
+                        document.getElementById("logoscreen").setAttribute("visible", false);
+                        document.getElementById("menuroom").setAttribute("visible", false);
+                        document.getElementById("field").setAttribute("visible", true);
+                        document.getElementById("player").setAttribute("position", "-130 2 20");
+                        document.getElementById("player").setAttribute("rotation", "0 0 0");
+                        document.getElementById("broom").setAttribute("visible", "true");
+                        document.getElementById("score").setAttribute("visible", "true");
+                        document.getElementById("time").setAttribute("visible", "false");
+                        document.getElementById("snitch").setAttribute("visible", "false");
+
+                        document.getElementById("quaffle").setAttribute("visible", "false");
+                        document.getElementById("course").setAttribute("visible", "true");
+                        document.getElementById("musicplayer").components.sound.stopSound();
+                        document.getElementById("musicplayer").setAttribute("sound", "src: #music_quidditch; autoplay: false");
+                        document.getElementById("musicplayer").components.sound.playSound();
+
+                        var rings = document.querySelectorAll(".ring");
+                        for (var i=0;i<rings.length;i++){
+                            rings[i].setAttribute("visible", "true");
+                            rings[i].components.ring.setEnabled(true);
+                            rings[i].parentElement.setAttribute("visible", "true");
+                        }
+
+
+                        document.getElementById("score").components.score.setEnabled(true);
+                        document.getElementById("snitch").components.snitch.setEnabled(false);
+
+                        this.song = "music_quidditch";
+                    } else if (e.detail.value=="snitch"){
+                        this.fliyingbroom.setActive(true);
+                        document.getElementById("logoscreen").setAttribute("visible", false);
+                        document.getElementById("menuroom").setAttribute("visible", false);
+                        document.getElementById("field").setAttribute("visible", true);
+                        document.getElementById("player").setAttribute("position", "-130 2 20");
+                        document.getElementById("player").setAttribute("rotation", "0 0 0");
+                        document.getElementById("broom").setAttribute("visible", "true");
+                        document.getElementById("score").setAttribute("visible", "false");
+                        document.getElementById("time").setAttribute("visible", "time");
+                        document.getElementById("snitch").setAttribute("visible", "true");
+                        document.getElementById("quaffle").setAttribute("visible", "false");
+                        document.getElementById("course").setAttribute("visible", "false");
+                        document.getElementById("musicplayer").components.sound.stopSound();
+                        document.getElementById("musicplayer").setAttribute("sound", "src: #music_quidditch; autoplay: false");
+                        document.getElementById("musicplayer").components.sound.playSound();
+                        this.song = "music_quidditch";
+                        document.getElementById("snitch").components.snitch.reset();
+                        document.getElementById("score").components.score.setEnabled(false);
+                        document.getElementById("snitch").components.snitch.setEnabled(true);
+
+                        var rings = document.querySelectorAll(".ring");
+                        for (var i=0;i<rings.length;i++){
+                            rings[i].setAttribute("visible", "false");
+                            rings[i].components.ring.setEnabled(false);
+                            rings[i].parentElement.setAttribute("visible", "false");
+                        }
+                    } else if (e.detail.value=="quaffle"){
+                        this.fliyingbroom.setActive(false);
+                        document.getElementById("logoscreen").setAttribute("visible", false);
+                        document.getElementById("menuroom").setAttribute("visible", false);
+                        document.getElementById("field").setAttribute("visible", true);
+                        document.getElementById("player").setAttribute("position", "-115 5 0");
+                        document.getElementById("player").setAttribute("rotation", "0 90 0");
+                        document.getElementById("broom").setAttribute("visible", "true");
+                        document.getElementById("score").setAttribute("visible", "false");
+                        document.getElementById("time").setAttribute("visible", "time");
+                        document.getElementById("snitch").setAttribute("visible", "false");
+                        document.getElementById("quaffle").setAttribute("visible", "true");
+                        document.getElementById("course").setAttribute("visible", "false");
+                        document.getElementById("musicplayer").components.sound.stopSound();
+                        document.getElementById("musicplayer").setAttribute("sound", "src: #music_quidditch; autoplay: false");
+                        document.getElementById("musicplayer").components.sound.playSound();
+                        this.song = "music_quidditch";
+                        document.getElementById("quaffle").components.quaffle.reset();
+
+                        var rings = document.querySelectorAll(".ring");
+                        for (var i=0;i<rings.length;i++){
+                            rings[i].setAttribute("visible", "false");
+                            rings[i].components.ring.setEnabled(false);
+                            rings[i].parentElement.setAttribute("visible", "false");
+                        }
+
+                        document.getElementById("score").components.score.setEnabled(false);
+                        document.getElementById("snitch").components.snitch.setEnabled(false);
+                    }
+                })
+            }
+        })
 
 
 
       </script>
 
-    <a-scene keys id="mainscene" class="controls">
+    <a-scene keys mainscene id="mainscene" class="controls">
         <a-assets>
+            <img id="logo" src="img/logo.jpg">
+            <img id="banners" src="img/baners.png">
+            <img id="hogwarts" src="img/hogwarts.png">
+            <img id="quidditch" src="img/quidditch.png">
+
+            <audio id="music_quidditch" src="sound/the-whip2.mp3" preload="auto"></audio>
+            <audio id="music_potter" src="sound/potter.mp3" preload="auto"></audio>
+
             <img id="grass" src="textures/grass_seamless.jpg" />
             <img id="sand" src="textures/sand_seamless.jpg" />
             <img id="metal" src="textures/metal_seamless.jpg" />
             <img id="wood" src="textures/wood.jpg" />
+            <img id="stone" src="textures/stone.jpg" />
             <img id="sunny-sky" src="textures/sunny-sky.jpg" />
+
+            <a-asset-item id="nimbusmodel" src="/models/nimbus/scene.gltf"></a-asset-item>
+            <a-asset-item id="snitchmodel" src="/models/snitch2/scene.gltf"></a-asset-item>
+            <a-asset-item id="quafflemodel" src="/models/quaffle/scene.gltf"></a-asset-item>
+            <a-asset-item id="assets" src="/models/assets/scene.gltf"></a-asset-item>
         </a-assets>
 
 
 
-        <a-entity id="player" position="0 0 0" fliying-broom="controls: .controls">
-            <a-entity camera position="0 1.6 0" look-controls>
-                <a-text id="debug" position="0 0.3 -2" value="debug" visible="false"></a-text>
+        <a-entity id="player" position="0 0 0" fliyingbroom="controls: .controls">
+            <a-entity camera position="0 1.8 0" look-controls >
+                <a-text id="debug" position="0 0 -2" text="align:center;value:debug" visible="false" ></a-text>
+                <a-text visible="false" id="score" score="rings: .ring" position="0 0.5 -2" text="align:center;value:Rings: 10 - Time: 000"></a-text>
+                <a-text visible="false" id="time" position="0 0.5 -2" text="align:center;value:Time: 000" ></a-text>
             </a-entity>
-            <a-entity id="lefthand" sphere-collider="objects:.touchable2" super-hands hand-controls="hand: left" handcontrol class="controls">
-                <a-box width="0.01" height="0.01" depth="0.01" color="red" sphere-collider="objects:.control"></a-box>
+            <a-entity id="lefthand" sphere-collider="objects:.touchable" super-hands hand-controls="hand: left" handcontrol class="controls">
             </a-entity>
-            <a-entity id="righthand" sphere-collider="objects:.touchable2" super-hands hand-controls="hand: right" ></a-entity>
-
-            <a-entity id="broom" gltf-model="#nimbus" scale="0.01 0.01 0.01" position="0.025 0.3 0.1" rotation="0 90 25">
+            <a-entity id="righthand" sphere-collider="objects:.touchable" super-hands hand-controls="hand: right" grabcontrol class="righthand">
+                <a-entity id="handsnitch" gltf-model="#snitchmodel" scale="0.0005 0.0005 0.0005" light="intensity: 0.4;distance:2;color:#FFD700;type:point" rotation="0 0 90" position="-0.05 0 0">
+                </a-entity>
             </a-entity>
 
+            <a-entity visible="false" id="broom" gltf-model="#nimbusmodel" scale="0.01 0.01 0.01" position="0.025 0.3 0.1" rotation="0 90 25" sphere-collider="objects:.ring">
+            </a-entity>
+
+            <a-entity id="soundeffects"></a-entity>
+            <a-entity id="wineffect" sound="src: url(sound/win.mp3); autoplay: false;"></a-entity>
+            <a-entity id="musicplayer" sound="src: #music_potter; autoplay: false"></a-entity>
+
+        </a-entity>
 
 
+
+
+        <a-entity id="snitch" snitch="target: #snitchtarget" gltf-model="#snitchmodel" scale="0.0005 0.0005 0.0005" position="-150 10 0" rotation="0 0 0" class="touchable"
+            light="intensity: 0.4;distance:2;color:#FFD700;type:point"
+            look-at="#snitchtarget"
+            >
+        </a-entity>
+        <a-entity id="snitchtarget" position="150 10 0"></a-entity>
+
+
+        <a-entity id="quaffle" quaffle="controls: .righthand" gltf-model="#quafflemodel" scale="0.005 0.005 0.005" position="-150 10 0" rotation="0 0 0" class="touchable">
         </a-entity>
 
 
@@ -50,11 +237,16 @@ html>
 
 
 
+        <a-entity light="type: ambient; color: #BBB"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
+
+
+
 
 
         <!-- FIELD-->
-
-        <a-plane material="color: #FFFFFF;
+        <a-entity id="field" visible="false">
+            <a-plane material="color: #FFFFFF;
                         src: #grass;
                         repeat: 5000 5000"
                         rotation="-90 0 0"
@@ -66,7 +258,6 @@ html>
                         height="10000"></a-plane-->
 
         <a-sky src="#sunny-sky" rotation="0 -115 0" material="" geometry="" scale=""></a-sky>
-
         <a-ring color="#FFFFFF"
                 position="0 0.05 0"
                 scale="1 0.236 1"
@@ -256,26 +447,157 @@ html>
                 width=200
                 depth="2"
                 height=0.5></a-box>
+        </a-entity>
+    </a-entity>
+
+        <!---------------------------------------------------------------------------------->
+        <a-entity id="course" visible="false">
+            <a-torus
+                    color="yellow"
+                    position="-100 5 10"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="-60 10 20"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="-10 20 30"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="40 18 25"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="125 8 15"
+                    rotation="0 -45 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+            <a-torus color="yellow"
+                    position="125 15 -15"
+                    rotation="0 45 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="80 20 -25"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="10 25 -15"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="-50 15 -35"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+
+            <a-torus color="yellow"
+                    position="-100 8 -35"
+                    rotation="0 90 0"
+                    radius="4"
+                    radius-tubular="0.05">
+                    <a-circle ring class="ring" material="side: double; transparent:true; opacity:0.2; color:blue" radius="4"></a-circle>
+                </a-torus>
+        </a-entity>
+
+        <a-entity id="menuroom" visible="false">
+
+            <a-box material="color: #FFFFFF;
+                            repeat: 6 6;
+                            side: double;
+                            src: #stone;"
+                        height="3"
+                        width="6"
+                        depth="6"
+                        position="1 1.3 0"
+                        >
+
+            <a-entity gltf-model="#assets" scale="0.15 0.15 0.15" rotation="0 90 0" position="2 -1.5 0">
+            </a-entity>
+
+
+            <a-sphere material="transparent:true; opacity:0; color:blue" radius="0.2" menuitem="minigame:rings" position="-0.5 -0.4 -0.6" class="touchable menuitem">
+                <a-entity id="menu_broom" gltf-model="#nimbusmodel" scale="0.002 0.002 0.002" rotation="0 -90 20">
+                </a-entity>
+                <a-torus color="yellow"
+                        position="0 0 0"
+                        rotation="0 0 0"
+                        radius="0.1"
+                        radius-tubular="0.005">
+                    </a-torus>
+            </a-sphere>
+
+
+
+            <a-sphere material="transparent:true; opacity:0; color:blue" radius="0.2" menuitem="minigame:snitch" position="-0.4 -0.4 0" class="touchable menuitem">
+                <a-entity gltf-model="#snitchmodel" scale="0.0005 0.0005 0.0005" light="intensity: 0.4;distance:2;color:#FFD700;type:point">
+                </a-entity>
+            </a-sphere>
+
+
+            <a-sphere material="transparent:true; opacity:0; color:blue" radius="0.2" menuitem="minigame:quaffle" position="-0.5 -0.4 0.6" class="touchable menuitem">
+                <a-entity gltf-model="#quafflemodel" scale="0.005 0.005 0.005">
+                </a-entity>
+            </a-sphere>
+
+            <a-image src="#banners" rotation="0 -90 0" position="2.95 0.2 0" scale="3 3 3"></a-image>
+
+            <a-image src="#hogwarts" rotation="0 0 0" position="0 0 -2.95" scale="3 3 3"></a-image>
+
+            <a-image src="#quidditch" rotation="0 180 0" position="0 0.2 2.95" scale="2 2 2"></a-image>
+
+
+            <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 4000; easing: linear;">
+                <a-entity position="2.5 0 0" gltf-model="#snitchmodel" scale="0.0005 0.0005 0.0005" light="intensity: 0.4;distance:2;color:#FFD700;type:point">
+                </a-entity>
+            </a-entity>
+
 
         </a-entity>
 
 
+        <a-image id="logoscreen" logoscreen src="#logo" rotation="0 -90 0" position="1.5 1 0"></a-image>
 
 
 
 
-
-
-
-
-
-
-
+        </a-entity>
 
     </a-scene>
-
-
-
 
   </body>
 </html>
